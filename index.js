@@ -29,7 +29,7 @@ function draw(ctx, w, h) {
     fns[Object.keys(fns)[
         Math.floor(Math.random() * Object.keys(fns).length)
     ]](ctx, w, h)
-    // fns['gradient_hsb'](ctx, w, h)
+    // fns['sin_diag_sq'](ctx, w, h)
 
     ctx.restore()
 }

@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "gen": "node generate.js",
-    "dev": "node generate.js; vite --port 1212",
+    "dev": "node generate.js; vite --host --port 1212",
     "build": "vite build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

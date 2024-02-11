@@ -1,29 +1,3 @@
-function give_me_center(dims, obj) {
-    if (!obj) {
-        obj = {
-            w: 0,
-            h: 0
-        }
-    }
-    return {
-        x: dims.w / 2 - (obj.w / 2),
-        y: dims.h / 2 - (obj.h / 2)
-    }
-}
-
-function clear(ctx, area) {
-    ctx.clearRect(area.x, area.y, area.w, area.h)
-}
-
-function iterate(rules) {
-    rules.t += 1
-}
-
-function newRound(rules) {
-    rules.t = 0
-    rules.color.h = Math.random() * 360
-}
-
 function calcPerc(v, s) {
     return v/100 * s
 }
@@ -34,21 +8,35 @@ function calcAngle(a, q) {
 
 class Loaders {
     constructor(name) {
+        this.count = 0
         this.type = name
-        this.values = {}
         this.container = {}
         this.perc = 0
-        this.rules = this.calcRules()
-        this.rotation = ['default', 'circle', 'dots']
+    }
+
+    give_me_center(dims, obj) {
+        if (!obj) {
+            obj = {
+                w: 0,
+                h: 0
+            }
+        }
+        return {
+            x: dims.w / 2 - (obj.w / 2) + dims.x,
+            y: dims.h / 2 - (obj.h / 2) + dims.y
+        }
+    }
+
+    set styles(arr) {
+        this.rotation = arr
         this.rotation = this.rotation.filter((x) => x != this.type)
         this.rotation.push(this.type)
     }
 
-    calcRules() {
-        return this.defaultRules()
-        // if (this.type == 'default') {
-        //     return this.defaultRules()
-        // }
+    set rulesOf(name) {
+        if (name == 'default') {
+            this.rules = this.defaultRules()
+        }
     }
 
     defaultRules() {
@@ -73,8 +61,9 @@ class Loaders {
     defaultDraw(ctx) {
         const rect = this.rules.rect
         const c = this.rules.color
-        const coords = give_me_center({w: this.container.w, h: this.container.h}, rect)
+        const coords = this.give_me_center(this.container, rect)
         this.perc = calcPerc(this.rules.t, this.rules.speed)
+        ctx.save()
         ctx.fillStyle = `hsl(${c.h}, ${c.s}%, ${c.l}%, ${c.a * this.perc})`
         ctx.fillRect(
             coords.x,
@@ -82,14 +71,16 @@ class Loaders {
             rect.w * this.perc,
             rect.h
         )
+        ctx.restore()
     }
 
     dotsDraw(ctx) {
         const rect = this.rules.rect
         const c = this.rules.color
-        const coords = give_me_center({w: this.container.w, h: this.container.h}, rect)
+        const coords = this.give_me_center(this.container, rect)
         this.perc = calcPerc(this.rules.t, this.rules.speed)
         for (let ix=0;ix<10*this.perc;ix++) {
+            ctx.save()
             ctx.fillStyle = `hsl(${c.h}, ${c.s}%, ${c.l}%, ${c.a * calcPerc(this.rules.t, this.rules.speed*0.8)})`
             ctx.beginPath()
             ctx.arc(
@@ -100,14 +91,16 @@ class Loaders {
                 calcAngle(1, 1)
             )
             ctx.fill()
+            ctx.restore()
         }
     }
 
     circleDraw(ctx) {
         const rect = this.rules.rect
         const c = this.rules.color
-        const coords = give_me_center({w: this.container.w, h: this.container.h}, null)
+        const coords = this.give_me_center(this.container, null)
         this.perc = calcPerc(this.rules.t, this.rules.speed)
+        ctx.save()
         ctx.fillStyle = `hsl(${c.h}, ${c.s}%, ${c.l}%, ${c.a * this.perc})`
         ctx.beginPath()
         ctx.arc(
@@ -127,6 +120,33 @@ class Loaders {
         )
         ctx.closePath()
         ctx.fill()
+        ctx.restore()
+    }
+
+    lineBounceDraw(ctx) {
+        const rect = this.rules.rect
+        const c = this.rules.color
+        const coords = this.give_me_center(this.container, null)
+        this.perc = calcPerc(this.rules.t, this.rules.speed)
+        ctx.save()
+        ctx.beginPath()
+        ctx.strokeStyle = `hsl(${c.h}, ${c.s}%, ${c.l}%, ${c.a})`
+        ctx.moveTo(coords.x - rect.w*.5, (coords.y + Math.sin(this.perc*20+Math.PI*.5)*20)+rect.h)
+        ctx.lineTo(coords.x + rect.w*.5, (coords.y + Math.sin(this.perc*20+Math.PI*.5)*20)+rect.h)
+        ctx.stroke()
+        ctx.restore()
+        ctx.save()
+        ctx.fillStyle = `hsl(${c.h}, ${c.s}%, ${c.l}%, ${c.a * this.perc})`
+        ctx.beginPath()
+        ctx.arc(
+            (coords.x - rect.w*.5) + (rect.w * this.perc),
+            coords.y + Math.sin(this.perc*20+Math.PI*.5)*20,
+            rect.h*.5,
+            0,
+            calcAngle(1, 1)
+        )
+        ctx.fill()
+        ctx.restore()
     }
 
     draw(ctx) {
@@ -137,40 +157,74 @@ class Loaders {
             this.dotsDraw(ctx)
         } else if (this.type == 'circle') {
             this.circleDraw(ctx)
+        } else if (this.type == 'linebounce') {
+            this.lineBounceDraw(ctx)
         }
         ctx.restore()
     }
 
     iterate() {
-        iterate(this.rules)
+        this.rules.t += 1
     }
 
-    next() {
+    next(isRotate) {
         if (this.perc < 1) return
-        newRound(this.rules)
-        this.rotateType()
+        this.count += 1
+        this.rules.t = 0
+        this.rules.color.h = Math.random() * 360
+        if (isRotate) {
+            this.rotateType()
+        }
     }
 
     rotateType() {
         this.type = this.rotation.shift()
         this.rotation.push(this.type)
     }
+
+    clear(ctx) {
+        ctx.save()
+        const area = this.container
+        ctx.clearRect(area.x, area.y, area.w, area.h)
+        ctx.restore()
+        this.fillbg(ctx)
+    }
+
+    fillbg(ctx) {
+        ctx.save()
+        const area = this.container
+        ctx.fillStyle = 'black'
+        ctx.fillRect(area.x, area.y, area.w, area.h)
+        ctx.restore()
+    }
 }
 
 function draw(ctx, loader) {
-    clear(ctx, loader.container)
+    loader.clear(ctx)
     loader.draw(ctx)
     window.requestAnimationFrame(() => {
         loader.iterate()
-        loader.next()
+        loader.next(false)
         draw(ctx, loader)
     })
 }
 
 function loading(ctx, w, h) {
-    const loader = new Loaders('dots')
-    loader.container = {x: 0, y: 0, w: w, h: h}
-    draw(ctx, loader)
+    const styles = ['default', 'dots', 'circle', 'linebounce']
+    const ncontainer = { w: 2, h: 2 }
+    for (let ix=0; ix<ncontainer.w; ix++){
+        for (let iy=0; iy<ncontainer.h; iy++) {
+            const x = styles[ix*ncontainer.w+iy]
+            const loader = new Loaders(x)
+            loader.quad = ix*ncontainer.w+iy
+            loader.styles = styles
+            loader.rulesOf = 'default'
+            const containerW = w/ncontainer.w
+            const containerH = h/ncontainer.h
+            loader.container = { x: containerW * (ix % ncontainer.w), y: containerH * (iy % ncontainer.h), w: containerW, h: containerH }
+            draw(ctx, loader)
+        }
+    }
 }
 
 export {

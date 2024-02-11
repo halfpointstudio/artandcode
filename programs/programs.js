@@ -1,5 +1,6 @@
 export * from './four_sq.js'
 export * from './gradienthsb.js'
+export * from './loader.js'
 export * from './numbers.js'
 export * from './ripple.js'
 export * from './sindiagsq.js'

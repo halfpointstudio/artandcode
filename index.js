@@ -29,7 +29,7 @@ function draw(ctx, w, h) {
     fns[Object.keys(fns)[
         Math.floor(Math.random() * Object.keys(fns).length)
     ]](ctx, w, h)
-    // fns['ripple'](ctx, w, h)
+    // fns['loading'](ctx, w, h)
 
     ctx.restore()
 }

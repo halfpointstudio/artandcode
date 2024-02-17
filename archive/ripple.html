@@ -1,0 +1,68 @@
+<html>
+
+<head>
+    <title> Generative Art | ripple </title>
+    <link rel='stylesheet' href='../style.css'>
+    <script type='module' defer>
+        import * as fns from '../programs/programs.js'
+
+        const canvas = document.createElement('canvas')
+        const ctx = canvas.getContext('2d')
+        ctx.imageSmoothingEnabled = false
+        document.getElementById('canvas').appendChild(canvas)
+
+        function resize() {
+            const parent = document.querySelector('section#canvas')
+            console.log(parent.offsetWidth, parent.offsetHeight)
+            const size = Math.min(parent.offsetWidth, parent.offsetHeight) * .9
+            canvas.style.width = size
+            canvas.style.height = size
+
+            canvas.width = Math.ceil(size / 1000) * 1000
+            canvas.height = Math.ceil(size / 1000) * 1000
+
+            window.requestAnimationFrame(() =>
+                draw(ctx, canvas.width, canvas.height)
+            )
+        }
+
+        window.addEventListener('resize', resize, true)
+        resize()
+
+        function draw(ctx, w, h) {
+            ctx.save()
+
+            console.log(fns)
+            fns['ripple'](ctx, w, h)
+
+            ctx.restore()
+        }
+    </script>
+</head>
+
+<body>
+    <header id='header'>
+        <section class='left'>
+            <nav>
+                <div> <a href='/'> Home </a> </div>
+            </nav>
+        </section>
+        <section class='right'>
+            <nav>
+                <div> <a href='../archive.html'> Archive </a> </div>
+                <div> About Us </div>
+            </nav>
+        </section>
+    </header>
+    <main>
+        <section id='canvas'>
+        </section>
+    </main>
+    <footer id='footer'>
+        <section id='center'>
+            made by Arsh and Laksh with HalfPoint Studio
+        </section>
+    </footer>
+</body>
+
+</html>

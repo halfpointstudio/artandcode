@@ -33,5 +33,5 @@ function squares_5(ctx, w, h) {
 }
 
 export {
-	squares_5
+    squares_5
 }

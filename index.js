@@ -16,6 +16,15 @@ function resize() {
     canvas.width = Math.ceil(size / 1000) * 1000
     canvas.height = Math.ceil(size / 1000) * 1000
 
+    const scale = window.devicePixelRatio
+    canvas.width = canvas.width * scale
+    canvas.height = canvas.height * scale
+
+    ctx.scale(scale, scale)
+    ctx.imageSmoothingEnabled = false
+    ctx.webkitImageSmoothingEnabled = false
+    ctx.msImageSmoothingEnabled = false
+
     window.requestAnimationFrame(() => 
         draw(ctx, canvas.width, canvas.height)
     )
@@ -49,6 +58,7 @@ function setup(fns, ctx, w, h) {
     }
 
     this.latest = () => {
+        // TODO: add meta filtering here based on dates
         let name = Object.keys(this.fns)[0]
         this.render = () => { render({name: name}) }
     }
@@ -66,7 +76,7 @@ function draw(ctx, w, h) {
 
     // fn.randomise()
     // fn.latest()
-    fn.override('gradient_hsb')
+    fn.override('circles')
     fn.render()
 
     ctx.restore()

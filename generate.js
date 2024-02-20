@@ -10,16 +10,18 @@ const exportFile = 'programs.js'
 const exportFilePath = `${dir}/${exportFile}`
 
 let scriptString = ''
-let metaData = null
 
-
-try {
-    metaData = fs.readFileSync(metaFilePath, 'utf-8')
-} catch (err) {
-    metaData = JSON.stringify({})
+function getMetaData(path) {
+    let data
+    try {
+        data = fs.readFileSync(path, 'utf-8')
+    } catch (err) {
+        data = JSON.stringify({})
+    }
+    return JSON.parse(data)
 }
-metaData = JSON.parse(metaData)
 
+let metaData = getMetaData(metaFilePath)
 
 fs.readdirSync(dir).forEach(file => {
     if (file == exportFile) return
@@ -41,9 +43,19 @@ function override(name, dt) {
 //     `:${new Date().getSeconds()}`
 // )
 
-metaData =  Object.entries(metaData)
-.sort(([,a], [,b]) => a-b)
-.reduce((acc, [k, v]) => ({...acc, [k]: v}), {})
+function sortMetaData(md, reverse=false) {
+    if (reverse) {
+        return Object.entries(md)
+            .sort(([,a], [,b]) => b-a)
+            .reduce((acc, [k, v]) => ({...acc, [k]: v}), {})
+    } else {
+        return Object.entries(md)
+            .sort(([,a], [,b]) => a-b)
+            .reduce((acc, [k, v]) => ({...acc, [k]: v}), {})
+    }
+}
+
+metaData = sortMetaData(metaData)
 
 // console.log(Object.entries(metaData).reduce((acc, [k, v]) => {
 //     acc[k] = formatDate(v, 'dt')
@@ -57,4 +69,7 @@ fs.writeFileSync(exportFilePath, scriptString)
 fs.writeFileSync(metaFilePath, JSON.stringify(metaData))
 console.info('Done!')
 
-
+export {
+    getMetaData,
+    sortMetaData
+}

@@ -17,6 +17,15 @@ function formatDate(time, dst) {
         minute: '2-digit',
         hour12: false,
     }
+
+    if (dst == 'hr:mdy') {
+        opts['month'] = 'short'
+    }
+
+    if (dst == 'hr:mmdy') {
+        opts['month'] = 'long'
+    }
+
     const f = new Intl.DateTimeFormat(undefined, opts)
     .formatToParts(srcDate)
     .reduce((acc, p) => {
@@ -44,6 +53,16 @@ function formatDate(time, dst) {
         // date and time 
         return `${f.day}-${f.month}-${f.year}` +
             ` ${f.hour}:${f.minute}`
+    }
+
+    if (dst == 'hr:mdy') {
+        // human readable month and date
+        return `${f.month} ${f.day} ${f.year}`
+    }
+
+    if (dst == 'hr:mmdy') {
+        // human readable month and date
+        return `${f.month} ${f.day} ${f.year}`
     }
 
     return time

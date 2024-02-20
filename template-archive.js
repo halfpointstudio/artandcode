@@ -1,4 +1,6 @@
 import fs from 'fs'
+import { getMetaData, sortMetaData } from './generate.js'
+import { formatDate } from './utils.js'
 
 const dir = './programs'
 const exports = {
@@ -16,11 +18,13 @@ const exports = {
     },
 }
 
+const data = sortMetaData(getMetaData('./metadata.json'), true)
 const programStringT = fs.readFileSync('template-program.html', 'utf-8')
 let contentString = ''
-fs.readdirSync(dir).forEach(file => {
+
+Object.entries(data).forEach(([file, time])=> {
     if (file == 'programs.js') return
-    contentString += wrapAroundRow(file)
+    contentString += wrapAroundRow([file, time])
     let programString = replace(
         programStringT, 
         { 
@@ -90,11 +94,15 @@ function capitalize(s) {
     return s
 }
 
-function wrapAroundRow(f) {
-    f = f.replace('.js', '')
-    const str = `
-    <div id='${f}' class='program'> Link to <a href='./archive/${f}.html'> 
-    ${capitalize(f.replace('_', ' '))} </a></div>
-    `
+function wrapAroundRow(arr) {
+    const f = arr[0].replace('.js', '')
+    const d = formatDate(arr[1], 'hr:mdy')
+    const str = `` +
+        `<div id='${f}' class='program'>` +
+        `[${d}] ` +
+        `Link to <a href='./archive/${f}.html'> ` +
+        `${capitalize(f.replace('_', ' '))}` +
+        `</a></div>`
+
     return str
 }

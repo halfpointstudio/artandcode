@@ -35,6 +35,19 @@ function override(name, dt) {
     if (!(name in metaData)) return
     metaData[name] = formatDate(dt, 'u')
 }
+function copy(src, dst) {
+    if (!(src in metaData)) return
+    metaData[dst] = metaData[src]
+}
+function move(src, dst) {
+    if (!(src in metaData)) return
+    copy(src, dst)
+    delete metaData[src]
+}
+// move(
+//     'grow.js',
+//     'back_to_basics.js',
+// )
 // override(
 //     'back_to_basics.js',
 //     'February 20 2024 17:45' +

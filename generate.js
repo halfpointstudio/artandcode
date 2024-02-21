@@ -1,5 +1,5 @@
 import fs from 'fs'
-import { formatDate } from './utils.js'
+import { formatDate, sortKVPair } from './utils.js'
 
 const dir = './programs'
 
@@ -57,17 +57,8 @@ function move(src, dst) {
 // )
 
 function sortMetaData(md, reverse=false) {
-    if (reverse) {
-        return Object.entries(md)
-            .sort(([,a], [,b]) => b-a)
-            .reduce((acc, [k, v]) => ({...acc, [k]: v}), {})
-    } else {
-        return Object.entries(md)
-            .sort(([,a], [,b]) => a-b)
-            .reduce((acc, [k, v]) => ({...acc, [k]: v}), {})
-    }
+    return sortKVPair(md, reverse)
 }
-
 metaData = sortMetaData(metaData)
 
 // console.log(Object.entries(metaData).reduce((acc, [k, v]) => {
@@ -84,5 +75,4 @@ console.info('Done!')
 
 export {
     getMetaData,
-    sortMetaData
 }

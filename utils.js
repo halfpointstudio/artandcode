@@ -136,10 +136,24 @@ class Rules {
     }
 }
 
+function sortKVPair(md, reverse=false) {
+    if (reverse) {
+        return Object.entries(md)
+            .sort(([,a], [,b]) => b-a)
+            .reduce((acc, [k, v]) => ({...acc, [k]: v}), {})
+    } else {
+        return Object.entries(md)
+            .sort(([,a], [,b]) => a-b)
+            .reduce((acc, [k, v]) => ({...acc, [k]: v}), {})
+    }
+}
+
+
 
 export {
     migrateToObj,
     formatDate,
     Rules,
     Helper,
+    sortKVPair,
 }

@@ -1,5 +1,6 @@
 import * as fns from './programs/programs.js'
-import { migrateToObj } from './utils.js'
+import { migrateToObj, sortKVPair } from './utils.js'
+import data from './metadata.json'
 
 const canvas = document.createElement('canvas')
 const ctx = canvas.getContext('2d')
@@ -39,6 +40,7 @@ function setup(fns, ctx, w, h) {
     this.ctx = ctx
     this.w = w
     this.h = h
+    this.render
 
     const render = (self) => {
         let fn
@@ -59,7 +61,7 @@ function setup(fns, ctx, w, h) {
 
     this.latest = () => {
         // TODO: add meta filtering here based on dates
-        let name = Object.keys(this.fns)[0]
+        let name = Object.keys(sortKVPair(data, true))[0].split('.')[0]
         this.render = () => { render({name: name}) }
     }
 
@@ -75,8 +77,8 @@ function draw(ctx, w, h) {
     const fn = new setup(listOfFns, ctx, w, h)
 
     // fn.randomise()
-    // fn.latest()
-    fn.override('circles')
+    fn.latest()
+    // fn.override('circles')
     fn.render()
 
     ctx.restore()

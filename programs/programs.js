@@ -1,4 +1,5 @@
 export * from './animateWithNumbers.js'
+export * from './back_to_basics.js'
 export * from './circles.js'
 export * from './four_sq.js'
 export * from './gradient_hsb.js'

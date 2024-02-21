@@ -36,10 +36,10 @@ function override(name, dt) {
     metaData[name] = formatDate(dt, 'u')
 }
 // override(
-//     'ripple.js',
-//     'January 21 2024 22' +
+//     'back_to_basics.js',
+//     'February 20 2024 17:45' +
 //     // `:${new Date().getHours()}` +
-//     `:${new Date().getMinutes()}` +
+//     // `:${new Date().getMinutes()}` +
 //     `:${new Date().getSeconds()}`
 // )
 

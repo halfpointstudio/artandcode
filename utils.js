@@ -68,7 +68,78 @@ function formatDate(time, dst) {
     return time
 }
 
+class Helper {
+    constructor() {}
+
+    rng(a, b) {
+        return Math.floor(Math.random() * b + a)
+    }
+}
+
+class Rules {
+    constructor(ctx, w, h) {
+        this.canvas = {
+            ctx: ctx,
+            w: w,
+            h: h,
+        }
+        this.time = 0
+        this.abnormality = {
+            x: (Math.random() * -2) + 1,
+            y: (Math.random() * -2) + 1,
+        }
+    }
+
+    enable(key, value) {
+        if (value == null) {
+            value = this._calldefaults(key)
+        }
+        this[key] = value
+    }
+
+    store(config) {
+        this.defaults = config
+        if ('color' in this.defaults) {
+            this.defaults.hue = config.color[0]
+            this.defaults.sat = config.color[1]
+            this.defaults.light = config.color[2]
+        }
+    }
+
+    _calldefaults(key) {
+        if (key in this.defaults) {
+            return this.defaults[key]
+        }
+        console.error(`This ${key} is not present in defaults, setting it to null`)
+        return null
+    }
+
+    _defaultHSB() {
+        if ('color' in this.defaults) {
+        
+        }
+    }
+
+    update(key, delta) {
+        this[key] += delta
+    }
+
+    update2D(key, delta) {
+        Object.keys(this[key]).forEach((k) => {
+            this[key][k] += delta[k]
+        })
+    }
+
+    override(key, value) {
+        if (!(key in this)) return
+        this[key] = value
+    }
+}
+
+
 export {
     migrateToObj,
-    formatDate
+    formatDate,
+    Rules,
+    Helper,
 }

@@ -1,8 +1,8 @@
 <html>
 
 <head>
-    <title> Generative Art | "{title}" </title>
-    <link rel='stylesheet' href='"{cssFile}"'>
+    <title> Generative Art | grow </title>
+    <link rel='stylesheet' href='../style.css'>
     <script type='module' defer>
         import * as fns from '../programs/programs.js'
 
@@ -32,7 +32,7 @@
         function draw(ctx, w, h) {
             ctx.save()
 
-            fns["{0}"](ctx, w, h)
+            fns['grow'](ctx, w, h)
 
             ctx.restore()
         }

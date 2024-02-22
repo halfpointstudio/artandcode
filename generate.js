@@ -27,6 +27,7 @@ fs.readdirSync(dir).forEach(file => {
     if (file == exportFile) return
     if (!(file in metaData)) {
         metaData[file] = formatDate(Date.now(), 'u')
+        console.info(`New File Detected: ${file}`, metaData[file])
     }
     scriptString += `export * from './${file}'\n`
 })
@@ -75,4 +76,5 @@ console.info('Done!')
 
 export {
     getMetaData,
+    sortMetaData
 }

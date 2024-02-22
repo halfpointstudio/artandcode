@@ -69,7 +69,15 @@ function formatDate(time, dst) {
 }
 
 class Helper {
-    constructor() {}
+    constructor(ctx, w, h) {
+        this.ctx = ctx
+        this.w = w
+        this.h = h
+    }
+
+    clear() {
+        this.ctx.clearRect(0, 0, this.w, this.h)
+    }
 
     rng(a, b) {
         return Math.floor(Math.random() * b + a)
@@ -84,9 +92,14 @@ class Rules {
             h: h,
         }
         this.time = 0
+        this.speed = 1
         this.abnormality = {
             x: (Math.random() * -2) + 1,
             y: (Math.random() * -2) + 1,
+        }
+        this.backup = {
+            time: this.time,
+            speed: this.speed
         }
     }
 
@@ -95,6 +108,7 @@ class Rules {
             value = this._calldefaults(key)
         }
         this[key] = value
+        this.backup[key] = JSON.parse(JSON.stringify(value))
     }
 
     store(config) {
@@ -125,7 +139,7 @@ class Rules {
     }
 
     update2D(key, delta) {
-        Object.keys(this[key]).forEach((k) => {
+        Object.keys(delta).forEach((k) => {
             this[key][k] += delta[k]
         })
     }
@@ -133,6 +147,14 @@ class Rules {
     override(key, value) {
         if (!(key in this)) return
         this[key] = value
+    }
+
+    _reset(key) {
+        this[key] = JSON.parse(JSON.stringify(this.backup[key]))
+    }
+
+    _next() {
+        this.time += 1   
     }
 }
 

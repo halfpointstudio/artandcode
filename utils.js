@@ -76,11 +76,32 @@ class Helper {
     }
 
     clear() {
+        this._clear()
+    }
+
+    _clear() {
         this.ctx.clearRect(0, 0, this.w, this.h)
+    }
+
+    _reset() {
+        this.ctx.reset()
+    }
+
+    _applyBG() {
+        this.ctx.fillRect(0, 0, this.w, this.h)
     }
 
     rng(a, b) {
         return Math.floor(Math.random() * b + a)
+    }
+
+    getHSLA(arr) {
+        return `hsl(` + 
+            `${arr[0]},`  +
+            `${arr[1]}%,` +
+            `${arr[2]}%,` +
+            `${(arr.length>3)?arr[3]:1}` +
+            `)`
     }
 }
 
@@ -91,6 +112,7 @@ class Rules {
             w: w,
             h: h,
         }
+        this.track = 0
         this.time = 0
         this.speed = 1
         this.abnormality = {
@@ -155,6 +177,7 @@ class Rules {
 
     _next() {
         this.time += 1   
+        this.track += 1
     }
 }
 

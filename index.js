@@ -78,7 +78,7 @@ function draw(ctx, w, h) {
 
     // fn.randomise()
     fn.latest()
-    // fn.override('circles')
+    // fn.override('text_framing')
     fn.render()
 
     ctx.restore()

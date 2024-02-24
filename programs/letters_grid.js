@@ -105,11 +105,34 @@ function letters_grid(ctx, w, h) {
     ])
     rules.enable('isGrid', false)
 
+    rules.enable('colors', [
+        [37, 100, 64, 1],
+        [163, 82, 11, 1],
+        [179, 90, 85],
+        // hsl(37, 100%, 64%)
+        // hsl(163, 82%, 11%)
+        // hsl(179, 44%, 55%)
+    ])
+
+    // const words = {
+    //     'unitedstates': 0,
+    //     'donaldtrump': 0,
+    //     'elizabeth2': 0,
+    //     'india': 0,
+    //     'barackobama': 0,
+    //     'cristinaoronaldo': 0,
+    //     'worldwar2': 0,
+    //     'unitedkingdom': 0,
+    //     'michaeljackson': 0,
+    //     'elonmusk': 0,
+    // }
+
     const words = {
         'jaded': 1,
         'confused': 0,
         'somewhere': 0,
     }
+
     // const words = {
     //     'brightmoments': 1,
     //     'france': 1, 
@@ -141,6 +164,7 @@ function letters_grid(ctx, w, h) {
 
 
     // let loadedData = '{"andreas":{"pos":883,"xdir":0,"isHighlighted":1},"brightmoments":{"pos":505,"xdir":1,"isHighlighted":1},"2024":{"pos":1887,"xdir":1,"isHighlighted":1},"france":{"pos":1420,"xdir":1,"isHighlighted":1},"martingrasser":{"pos":353,"xdir":1,"isHighlighted":1},"vanden":{"pos":889,"xdir":1,"isHighlighted":1},"aranda":{"pos":178,"xdir":1,"isHighlighted":1},"camilleroux":{"pos":1183,"xdir":1,"isHighlighted":1},"matthieu":{"pos":675,"xdir":1,"isHighlighted":1},"florian":{"pos":1351,"xdir":1,"isHighlighted":1},"paris":{"pos":1830,"xdir":0,"isHighlighted":1},"jeff":{"pos":962,"xdir":0,"isHighlighted":1},"luke":{"pos":188,"xdir":1,"isHighlighted":1},"maya":{"pos":365,"xdir":0,"isHighlighted":1},"rudxane":{"pos":1018,"xdir":1,"isHighlighted":1},"sarah":{"pos":1755,"xdir":1,"isHighlighted":1}}'
+    // let loadedData = '{"unitedstates":{"pos":2167,"xdir":0,"isHighlighted":0},"donaldtrump":{"pos":859,"xdir":0,"isHighlighted":0},"elizabeth2":{"pos":486,"xdir":1,"isHighlighted":0},"india":{"pos":1054,"xdir":1,"isHighlighted":0},"barackobama":{"pos":2414,"xdir":0,"isHighlighted":0},"cristinaoronaldo":{"pos":1400,"xdir":0,"isHighlighted":0},"worldwar2":{"pos":1276,"xdir":0,"isHighlighted":0},"unitedkingdom":{"pos":2033,"xdir":1,"isHighlighted":0},"michaeljackson":{"pos":631,"xdir":0,"isHighlighted":0},"elonmusk":{"pos":356,"xdir":1,"isHighlighted":0}}'
     // loadedData = JSON.parse(loadedData)
     // Object.entries(loadedData).forEach(([k, v]) => {
     //     v.isHighlighted = words[k]

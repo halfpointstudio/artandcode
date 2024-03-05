@@ -91,6 +91,10 @@ class Helper {
         this.ctx.fillRect(0, 0, this.w, this.h)
     }
 
+    shearX(angle) {
+        this.ctx.transform(1, 0, Math.tan(angle * Math.PI/180), 1, 0, 0)
+    }
+
     rng(a, b) {
         return Math.floor(Math.random() * b + a)
     }
@@ -102,6 +106,14 @@ class Helper {
             `${arr[2]}%,` +
             `${(arr.length>3)?arr[3]:1}` +
             `)`
+    }
+
+    randomHSLA() {
+        return this.getHSLA([
+            this.rng(0, 360),
+            45,
+            55,
+        ])
     }
 }
 

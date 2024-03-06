@@ -115,6 +115,13 @@ class Helper {
             55,
         ])
     }
+
+    angleToCoords(centerX, centerY, radius, angle) {
+        return {
+            x: centerX + Math.cos(angle) * radius,
+            y: centerY + Math.sin(angle) * radius
+        }
+    }
 }
 
 class Rules {
@@ -168,18 +175,43 @@ class Rules {
         }
     }
 
+    _check(k) {
+        return k in this
+    }
+
     update(key, delta) {
-        this[key] += delta
+
+        if (!this._check(key)) {
+            error(`${key} key does not exist`)
+            return
+        }
+
+        if (Array.isArray(this[key])) {
+            this[key].forEach((_, i) => {
+                this[key][i] += delta[i]
+            })
+        } else {
+            this[key] += delta
+        }
     }
 
     update2D(key, delta) {
+
+        if (!this._check(key)) {
+            error(`${key} key does not exist`)
+            return
+        }
+
         Object.keys(delta).forEach((k) => {
             this[key][k] += delta[k]
         })
     }
 
     override(key, value) {
-        if (!(key in this)) return
+        if (!this._check(key)) {
+            error(`${key} key does not exist`)
+            return
+        }
         this[key] = value
     }
 
@@ -191,6 +223,10 @@ class Rules {
         this.time += 1   
         this.track += 1
     }
+}
+
+function error(str) {
+    console.error(str)
 }
 
 function sortKVPair(md, reverse=false) {

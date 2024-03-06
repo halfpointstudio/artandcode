@@ -91,12 +91,64 @@ class Helper {
         this.ctx.fillRect(0, 0, this.w, this.h)
     }
 
+    _guidelines() {
+        // Y axis
+        this.ctx.beginPath()
+        this.ctx.moveTo(this.w/2, 0)
+        this.ctx.lineTo(this.w/2, this.h)
+        this.ctx.stroke()
+        // X axis
+        this.ctx.beginPath()
+        this.ctx.moveTo(0, this.h/2)
+        this.ctx.lineTo(this.w, this.h/2)
+        this.ctx.stroke()
+    }
+
+    toIsometricProjection(x, y) {
+        this.ctx.translate(x, y)
+        let ra = -45 * Math.PI/180
+        let sa = 15 * Math.PI/180
+        this.ctx.transform(
+            Math.cos(ra) - Math.sin(ra) * Math.tan(sa),
+            Math.sin(ra) + Math.cos(ra) * Math.tan(sa),
+            Math.cos(ra) * Math.tan(sa) - Math.sin(ra),
+            Math.sin(ra) * Math.tan(sa) + Math.cos(ra),
+            0, 0
+        )
+        this.ctx.translate(-x, -y)
+    }
+
+    shear(ax, ay) {
+        this.ctx.transform(
+            1, Math.tan(ay * Math.PI/180), Math.tan(ax * Math.PI/180),
+            1, 0, 0
+        )
+    }
+
     shearX(angle) {
-        this.ctx.transform(1, 0, Math.tan(angle * Math.PI/180), 1, 0, 0)
+        this.shear(angle, 0)
+    }
+
+    shearY(angle) {
+        this.shear(0, angle)
     }
 
     rng(a, b) {
         return Math.floor(Math.random() * b + a)
+    }
+
+    // TODO: return continues value over an equation
+    valuesOverCurve() {
+        // example
+        // yield sin()
+        // yield linear()
+        return
+    }
+
+    // TODO: continues values 
+    speed() {
+        // helper.valueOverCurve()
+        return
     }
 
     getHSLA(arr) {

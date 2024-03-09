@@ -75,6 +75,12 @@ class Helper {
         this.h = h
     }
 
+    init(ctx, w, h) {
+        this.ctx = ctx
+        this.w = w
+        this.h = h
+    }
+
     clear() {
         this._clear()
     }
@@ -91,7 +97,8 @@ class Helper {
         this.ctx.fillRect(0, 0, this.w, this.h)
     }
 
-    _guidelines() {
+    _debugCenterLines() {
+        this.ctx.save()
         // Y axis
         this.ctx.beginPath()
         this.ctx.moveTo(this.w/2, 0)
@@ -102,6 +109,14 @@ class Helper {
         this.ctx.moveTo(0, this.h/2)
         this.ctx.lineTo(this.w, this.h/2)
         this.ctx.stroke()
+        this.ctx.restore()
+    }
+
+    _debugGridLines(cell) {
+        this.ctx.save()
+        this.ctx.strokeStyle = 'black'
+        this.ctx.strokeRect(cell.x, cell.y, cell.w, cell.h)
+        this.ctx.restore()
     }
 
     toIsometricProjection(x, y) {
@@ -118,7 +133,7 @@ class Helper {
         this.ctx.translate(-x, -y)
     }
 
-    shear(ax, ay) {
+    shear(ay, ax) {
         this.ctx.transform(
             1, Math.tan(ay * Math.PI/180), Math.tan(ax * Math.PI/180),
             1, 0, 0
@@ -126,15 +141,15 @@ class Helper {
     }
 
     shearX(angle) {
-        this.shear(angle, 0)
-    }
-
-    shearY(angle) {
         this.shear(0, angle)
     }
 
+    shearY(angle) {
+        this.shear(angle, 0)
+    }
+
     rng(a, b) {
-        return Math.floor(Math.random() * b + a)
+        return Math.floor(Math.random() * (b-a) + a)
     }
 
     // TODO: return continues value over an equation
@@ -174,6 +189,14 @@ class Helper {
             y: centerY + Math.sin(angle) * radius
         }
     }
+
+    uintSin(value) {
+        return (Math.sin(value) + 1)/2
+    }
+
+    uintCos(value) {
+        return (Math.cos(value) + 1)/2
+    }
 }
 
 class Rules {
@@ -194,6 +217,10 @@ class Rules {
             time: this.time,
             speed: this.speed
         }
+    }
+
+    init(ctx, w, h) {
+        this.canvas = {ctx, w, h}
     }
 
     enable(key, value) {
